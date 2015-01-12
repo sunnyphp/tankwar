@@ -28,10 +28,6 @@ function Tank(direction,top,left,app,good){
 		//确定方向
 		this.changeDirection(this.direction);
 		document.body.appendChild(this.tankDiv);
-		if(this.good){
-			//如果为玩家坦克 则键盘控制
-			this.keyListen();
-		}
 		
 		if(!this.good){
 			//如果为ai坦克 则自由移动
@@ -156,39 +152,17 @@ function Tank(direction,top,left,app,good){
 
 	}
 	
-	this.keyListen = function(){
-		tankObj = this;
-		document.onkeydown = function(event){
-			var e = event || window.event || arguments.callee.caller.arguments[0];
-			switch(e.keyCode){
-				case 39:
-					tankObj.changeDirection('right');
-					tankObj.move();
-				break;
-				case 40:
-					tankObj.changeDirection('down');
-					tankObj.move();
-				break;
-				case 37:
-					tankObj.changeDirection('left');
-					tankObj.move();
-				break;
-				case 38:
-					tankObj.changeDirection('up');
-					tankObj.move();
-				break;
-				case 17:
-					tankObj.fire();
-				break;
-			}
-		}
-	
-	}
+
 
 	this.fire = function(i){
 		b = new Bullet(this.tankDiv.offsetTop,this.tankDiv.offsetLeft,this.direction,this.good,app);
-		b.drawBullet();
-		this.app.bullet.push(b);
+		if(this.app.bullet.length == 0){
+			b.drawBullet();
+			this.app.bullet.push(b);
+		}
+			
+		
+		
 		
 	}
 

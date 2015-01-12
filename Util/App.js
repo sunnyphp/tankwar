@@ -25,6 +25,7 @@ function App(){
 	this.init = function(){
 		this.mytank = new Tank('up',400,760,this,true);
 		this.mytank.drawTank();
+		this.keyListen();
 		this.drawMap();
 		this.bullet = new Array();
 		this.aitank = new Array();
@@ -54,13 +55,6 @@ function App(){
 	}
 	
 	this.run = function(){
-		//console.log(this.aitank.length);
-		//boom
-		// for(i=0;i<this.boom.length;i++){
-		// 	this.boom[i].drawBoom();
-		// 	this.boom[i].run();
-		// }
-
 		//子弹循环
 		for(k=0;k<this.bullet.length;k++){
 			if(this.bullet[k] != null){
@@ -105,17 +99,20 @@ function App(){
 		if(this.mytank.life == 0){
 			setTimeout(function(){
 				alert('游戏失败~！');
+				clearInterval(this.run_set);
+				clearInterval(this.b_set);
+				location.reload(true);
 			},600);
 			delete this.mytank;
-			clearInterval(this.run_set);
-			clearInterval(this.b_set);
 		}
 
 		if(this.aitank.length == 0 && this.mytank != null){
+			clearInterval(this.run_set);
+			clearInterval(this.b_set);
 			setTimeout(function(){
 				alert('游戏胜利~！');
+				location.reload(true);
 			},600);
-			clearInterval(this.run_set);
 		}
 		//玩家坦克撞到ai坦克
 		for(m=0;m<this.aitank.length;m++){
@@ -156,6 +153,7 @@ function App(){
 		this.mapDiv.style.height = this.mapHeight;
 		this.mapDiv.style.margin = '100px auto';
 		this.mapDiv.style.backgroundColor = "black";
+		this.mapDiv.focus();
 		document.body.appendChild(this.mapDiv);
 
 		//生命值
@@ -209,11 +207,38 @@ function App(){
 			document.body.appendChild(this.grassDiv1[g]);
 		}
 	}
+
+	//玩家键盘监听
+	this.keyListen = function(){
+	tankObj = this;
+	document.onkeydown = function(event){
+	var e = event || window.event || arguments.callee.caller.arguments[0];
+		switch(e.keyCode){
+			case 39:
+				tankObj.mytank.changeDirection('right');
+				tankObj.mytank.move();
+			break;
+			case 40:
+				tankObj.mytank.changeDirection('down');
+				tankObj.mytank.move();
+			break;
+			case 37:
+				tankObj.mytank.changeDirection('left');
+				tankObj.mytank.move();
+			break;
+			case 38:
+				tankObj.mytank.changeDirection('up');
+				tankObj.mytank.move();
+			break;
+			case 17:
+				tankObj.mytank.fire();
+			break;
+			}
+		}
+	
+	}
 }
 
-	
-
-
-	function $(id){
-		return document.getElementById(id);
-	}
+function $(id){
+	return document.getElementById(id);
+}
